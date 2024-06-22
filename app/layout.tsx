@@ -20,7 +20,7 @@ export default function RootLayout({
   const theme = useServerDarkMode();
   return (
     <html lang="en" className={theme}>
-      <body className={`${inter.className} min-h-screen flex flex-col`}>
+      <body className={`${inter.className} min-h-screen flex flex-col px-8`}>
         {children}
       </body>
     </html>
