@@ -1,11 +1,14 @@
 "use client";
 import { useForm, SubmitHandler } from "react-hook-form";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+
 import Button from "@/components/button";
 import Input from "@/components/input";
 import Label from "@/components/label";
 import Select from "@/components/select";
 import { categories, types } from "@/lib/consts";
+import { transactionSchema } from "@/lib/validation";
 
 const fields = [
   {
@@ -26,6 +29,7 @@ const fields = [
     label: "Date",
     name: "created_at",
     component: Input,
+    type: "date",
     validation: { required: "Date is required" },
   },
   {
@@ -41,7 +45,7 @@ const fields = [
     component: Input,
     type: "text",
     span: 2,
-    validation: { required: "Amount is required" },
+    validation: { required: "Description is required" },
   },
 ];
 
@@ -50,8 +54,12 @@ export default function TransactionForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ mode: "onTouched" });
-  const onSubmit = (data) => console.log(data);
+  } = useForm({ mode: "onTouched", resolver: zodResolver(transactionSchema) });
+
+  const onSubmit = (data) => {
+    console.log(data);
+    console.log(process.env.NEXT_PUBLIC_API_URL);
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4">
