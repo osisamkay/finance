@@ -1,7 +1,7 @@
 {
   "transactions": [
     {
-      "id": 1,
+      "id": "1",
       "amount": 100,
       "type": "expense",
       "description": "Restaurant",
@@ -9,7 +9,7 @@
       "created_at": "2023-03-15T23:00:00"
     },
     {
-      "id": 2,
+      "id": "2",
       "amount": 159,
       "type": "expense",
       "description": "Gas",
@@ -17,23 +17,62 @@
       "created_at": "2023-03-15T23:00:00"
     },
     {
-      "id": 3,
+      "id": "3",
       "amount": 500,
       "type": "income",
       "description": "Salary",
       "category": "",
       "created_at": "2023-03-15T23:00:00"
-       },
+    },
     {
-      "id": 4,
+      "id": "4",
       "amount": 99,
       "type": "expense",
       "description": "Rent",
       "category": "Housing",
       "created_at": "2024-05-10T23:00:00"
+    },
+    {
+      "id": "1e5b",
+      "type": "saving",
+      "category": "Food",
+      "amount": 21,
+      "description": "Voluptate rerum cupi",
+      "created_at": "1980-03-09T00:00:00"
+    },
+    {
+      "id": "0a17",
+      "type": "income",
+      "category": "Education",
+      "amount": 99,
+      "description": "Exercitationem sapie",
+      "created_at": "2005-09-16T00:00:00"
+    },
+    {
+      "id": "3c8c",
+      "type": "income",
+      "category": "Food",
+      "amount": 40,
+      "description": "Est excepturi at nu",
+      "created_at": "2010-04-11T00:00:00"
+    },
+    {
+      "id": "a93a",
+      "type": "investment",
+      "category": "Education",
+      "amount": 26,
+      "description": "Optio lorem reprehe",
+      "created_at": "1973-10-11T00:00:00"
+    },
+    {
+      "id": "a6b0",
+      "type": "expense",
+      "category": "Health",
+      "amount": 97,
+      "description": "Excepteur voluptatem",
+      "created_at": "2020-07-27T00:00:00"
     }
   ],
-  
   "trends": [
     {
       "id": "income",
