@@ -3,55 +3,43 @@ import Skeleton from "@/components/skeleton";
 export default function TransactionListFallback() {
   return (
     <div className="space-y-8">
-      <div className="space-y-4">
-        <TransactionSummaryItemSkeleton />
-        <TransactionItemSkeleton />
-        <TransactionItemSkeleton />
-        <TransactionItemSkeleton />
-        <TransactionItemSkeleton />
-      </div>
+      {[...Array(2)].map((_, idx) => (
+        <div key={idx} className="space-y-4">
+          <TransactionSummaryItemSkeleton />
+          {[...Array(4)].map((_, idx) => (
+            <TransactionItemSkeleton key={idx} />
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
 
-      <div className="space-y-4">
-        <TransactionSummaryItemSkeleton />
-        <TransactionItemSkeleton />
-        <TransactionItemSkeleton />
-        <TransactionItemSkeleton />
-        <TransactionItemSkeleton />
-      </div>
+function SkeletonLayout({ layout }) {
+  return (
+    <div className="flex space-x-4">
+      {layout.map((className, idx) => (
+        <div key={idx} className={className}>
+          <Skeleton />
+        </div>
+      ))}
     </div>
   );
 }
 
 function TransactionItemSkeleton() {
   return (
-    <div className="w-full flex items-center space-x-4">
-      <div className="flex items-center grow">
-        <Skeleton />
-      </div>
-      <div className="min-w-[150px] items-center hidden md:flex">
-        <Skeleton />
-      </div>
-      <div className="min-w-[70px] text-right">
-        <Skeleton />
-      </div>
-      <div className="min-w-[50px] flex justify-end">
-        <Skeleton />
-      </div>
-    </div>
+    <SkeletonLayout
+      layout={[
+        "flex items-center grow",
+        "min-w-[150px] items-center hidden md:flex",
+        "min-w-[70px] text-right",
+        "min-w-[50px] flex justify-end",
+      ]}
+    />
   );
 }
 
 function TransactionSummaryItemSkeleton() {
-  return (
-    <div className="flex space-x-4">
-      <div className="grow">
-        <Skeleton />
-      </div>
-
-      <div className="min-w-[70px]">
-        <Skeleton />
-      </div>
-      <div className="min-w-[50px]"></div>
-    </div>
-  );
+  return <SkeletonLayout layout={["grow", "min-w-[70px]", "min-w-[50px]"]} />;
 }

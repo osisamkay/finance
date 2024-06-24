@@ -105,11 +105,7 @@ export default function TransactionForm() {
               ) : (
                 <Component type={type} {...register(name, validation)} />
               )}
-              {errors[name] && (
-                <p className="text-red-600 text-sm mt-1">
-                  {errors[name]?.message}
-                </p>
-              )}
+              {errors[name] && <FormError error={errors.message} />}
             </div>
           )
         )}
