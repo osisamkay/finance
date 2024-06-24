@@ -15,9 +15,6 @@ const getLinkClasses = () =>
   `flex items-center space-x-1 ${variants["outline"]} ${sizes["sm"]}`;
 
 export default function Page() {
-  const client = createClient();
-  console.log(client.from("transactions").select());
-
   return (
     <>
       <section>

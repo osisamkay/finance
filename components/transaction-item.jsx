@@ -9,19 +9,19 @@ export default function TransactionItem({
   amount,
 }) {
   const typesMap = {
-    income: {
+    Income: {
       icon: HandCoins,
       colors: "text-green-500 dark:text-green-400",
     },
-    expense: {
+    Expense: {
       icon: Wallet,
       colors: "text-red-500 dark:text-red-400",
     },
-    saving: {
+    Saving: {
       icon: PiggyBank,
       colors: "text-indigo-500 dark:text-indigo-400",
     },
-    investment: {
+    Investment: {
       icon: Landmark,
       colors: "text-yellow-500 dark:text-yellow-400",
     },
