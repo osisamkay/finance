@@ -63,6 +63,7 @@ export default function TransactionForm() {
 
   const onSubmit = async (data) => {
     setSaving(true);
+
     try {
       await fetch(`${process.env.NEXT_PUBLIC_API_URL}/transactions`, {
         method: "POST",
