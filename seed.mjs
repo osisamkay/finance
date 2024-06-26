@@ -10,8 +10,6 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE
 );
-
-// Define categories for expense transactions
 const categories = [
   "Housing",
   "Transport",
@@ -21,11 +19,6 @@ const categories = [
   "Other",
 ];
 
-/**
- * Select a transaction type and category.
- *
- * @returns {Object} An object containing the type and category of the transaction.
- */
 const selectTypeAndCategory = () => {
   const typeBias = Math.random();
   if (typeBias < 0.8) {
@@ -43,12 +36,6 @@ const selectTypeAndCategory = () => {
   }
 };
 
-/**
- * Calculate the amount for a transaction based on its type.
- *
- * @param {string} type - The type of the transaction.
- * @returns {number} The calculated amount for the transaction.
- */
 const calculateAmount = (type) => {
   const amountRanges = {
     Income: { min: 2000, max: 9000 },
@@ -59,14 +46,7 @@ const calculateAmount = (type) => {
   return faker.number.int(amountRanges[type]);
 };
 
-/**
- * Seed the database with fake transactions.
- *
- * This function creates 10 fake transactions with randomized data and inserts
- * them into the Supabase 'transactions' table.
- */
 async function seed() {
-  // Generate an array of 10 fake transactions
   const transactions = Array.from({ length: 10 }, () => {
     const { type, category } = selectTypeAndCategory();
     return {
@@ -78,16 +58,15 @@ async function seed() {
     };
   });
 
-  // Insert the fake transactions into the 'transactions' table
-  const { error } = await supabase.from("transactions").insert(transactions);
+  const { data, error } = await supabase
+    .from("Transactions")
+    .insert(transactions);
 
-  // Log the result
   if (error) {
     console.error("Error inserting data", error);
   } else {
-    console.log("Data inserted");
+    console.log("Data inserted", data);
   }
 }
 
-// Execute the seed function and catch any errors
 seed().catch(console.error);

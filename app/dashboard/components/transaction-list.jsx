@@ -1,8 +1,7 @@
+import Separator from "@/components/separator"; // Use absolute import for consistency
+import TransactionItem from "@/components/transaction-item";
 import TransactionSummaryItem from "@/components/transaction-summary-item";
-
-import Separator from "../../../components/separator";
-import TransactionItem from "../../../components/transaction-item";
-import { createClient } from "../../../lib/supabase/server";
+import { createClient } from "@/lib/supabase/server"; // Use absolute import for consistency
 
 const groupAndSumTransactionsByDate = (transactions) => {
   const grouped = {};
@@ -24,9 +23,14 @@ const groupAndSumTransactionsByDate = (transactions) => {
 export default async function TransactionList() {
   const client = createClient();
   const { data: transactions, error } = await client
-    .from("transactions")
+    .from("Transactions")
     .select("*")
     .order("created_at", { ascending: false });
+
+  if (error) {
+    return <div>Error loading transactions: {error.message}</div>;
+  }
+
   const grouped = groupAndSumTransactionsByDate(transactions);
 
   return (

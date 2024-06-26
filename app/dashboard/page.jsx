@@ -2,14 +2,15 @@ import { Suspense } from "react";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 
+import { ErrorBoundary } from "react-error-boundary";
+
+import { types } from "../../lib/consts";
 import { createClient } from "../../lib/supabase/server";
 import { variants, sizes } from "../../lib/variants";
 import TransactionList from "./components/transaction-list";
 import TransactionListFallback from "./components/transaction-list-fallback";
 import Trend from "./components/trend";
 import TrendFallback from "./components/trend-fallback";
-
-const trends = ["income", "expense", "saving", "investment"];
 
 const getLinkClasses = () =>
   `flex items-center space-x-1 ${variants["outline"]} ${sizes["sm"]}`;
@@ -21,10 +22,18 @@ export default function Page() {
         <div className="text-4xl">Summary</div>
       </section>
       <section className="mb-8 grid grid-cols-2 lg:grid-cols-4 gap-8">
-        {trends.map((type) => (
-          <Suspense fallback={<TrendFallback />}>
-            <Trend type={type} />
-          </Suspense>
+        {types.map((type) => (
+          <ErrorBoundary
+            fallback={
+              <div className="flex justify-center my-5 ">
+                Cannot Fetch trend {type} data
+              </div>
+            }
+          >
+            <Suspense fallback={<TrendFallback />}>
+              <Trend type={type} />
+            </Suspense>
+          </ErrorBoundary>
         ))}
       </section>
       <section className="flex justify-between items-center mb-8">
