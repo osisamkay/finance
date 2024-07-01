@@ -23,7 +23,7 @@ const groupAndSumTransactionsByDate = (transactions) => {
 export default async function TransactionList() {
   const client = createClient();
   const { data: transactions, error } = await client
-    .from("Transactions")
+    .from("transactions")
     .select("*")
     .order("created_at", { ascending: false });
 
