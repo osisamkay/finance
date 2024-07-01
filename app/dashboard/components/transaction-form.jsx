@@ -114,7 +114,7 @@ export default function TransactionForm() {
               ) : (
                 <Component type={inputType} {...register(name)} />
               )}
-              {errors[name] && <FormError error={errors[name].message} />}
+              {errors[name] && <FormError error={errors[name]?.message} />}
             </div>
           )
         )}
