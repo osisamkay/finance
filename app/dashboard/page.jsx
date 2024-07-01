@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { ErrorBoundary } from "react-error-boundary";
 
+import Range from "../../components/range";
 import { types } from "../../lib/consts";
 import { createClient } from "../../lib/supabase/server";
 import { variants, sizes } from "../../lib/variants";
@@ -15,11 +16,15 @@ import TrendFallback from "./components/trend-fallback";
 const getLinkClasses = () =>
   `flex items-center space-x-1 ${variants["outline"]} ${sizes["sm"]}`;
 
-export default function Page() {
+export default function Page({ searchParams }) {
+  const range = searchParams?.range ?? "last30days";
   return (
     <>
-      <section>
-        <div className="text-4xl">Summary</div>
+      <section className="mb-8 flex justify-between items-center">
+        <h1 className="text-4xl font-semibold">Summary</h1>
+        <aside>
+          <Range />
+        </aside>
       </section>
       <section className="mb-8 grid grid-cols-2 lg:grid-cols-4 gap-8">
         {types.map((type) => (
@@ -31,7 +36,7 @@ export default function Page() {
             }
           >
             <Suspense fallback={<TrendFallback />}>
-              <Trend type={type} />
+              <Trend type={type} range={range} />
             </Suspense>
           </ErrorBoundary>
         ))}
