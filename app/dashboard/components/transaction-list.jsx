@@ -1,12 +1,26 @@
 "use client";
-import Separator from "@/components/separator"; // Use absolute import for consistency
+import { useState } from "react";
+
+import Button from "@/components/button";
+import Separator from "@/components/separator";
 import TransactionItem from "@/components/transaction-item";
 import TransactionSummaryItem from "@/components/transaction-summary-item";
-
+import { fetchTransactions } from "@/lib/actions";
 import { groupAndSumTransactionsByDate } from "@/lib/utils";
 
-export default async function TransactionList({ initialTransactions }) {
-  const grouped = groupAndSumTransactionsByDate(initialTransactions);
+export default function TransactionList({ range, initialTransactions }) {
+  const [transactions, setTransactions] = useState(initialTransactions);
+  const [offset, setOffset] = useState(initialTransactions.length);
+  const grouped = groupAndSumTransactionsByDate(transactions);
+
+  const handleClick = async (e) => {
+    const nextTransactions = await fetchTransactions(range, offset, 10);
+    setOffset((prevValue) => prevValue + 10);
+    setTransactions((prevTransactions) => [
+      ...prevTransactions,
+      ...nextTransactions,
+    ]);
+  };
 
   return (
     <div className="space-y-8">
@@ -23,6 +37,11 @@ export default async function TransactionList({ initialTransactions }) {
           </section>
         </div>
       ))}
+      <div className="flex justify-center">
+        <Button variant="ghost" onClick={handleClick}>
+          Load More
+        </Button>
+      </div>
     </div>
   );
 }
