@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,70 +9,39 @@ import FormError from "@/components/form-error";
 import Input from "@/components/input";
 import Label from "@/components/label";
 import Select from "@/components/select";
-import { createTransaction } from "@/lib/actions";
+import { createTransaction, updateTransaction } from "@/lib/actions";
 import { categories, types } from "@/lib/consts";
 import { transactionSchema } from "@/lib/validation";
 
-const fields = [
-  {
-    label: "Type",
-    name: "type",
-    component: Select,
-    options: types,
-  },
-  {
-    label: "Category",
-    name: "category",
-    component: Select,
-    options: categories,
-  },
-  {
-    label: "Date",
-    name: "created_at",
-    component: Input,
-    type: "date",
-  },
-  {
-    label: "Amount",
-    name: "amount",
-    component: Input,
-    type: "number",
-  },
-  {
-    label: "Description",
-    name: "description",
-    component: Input,
-    type: "text",
-    span: 2,
-  },
-];
-
-export default function TransactionForm() {
-  const [isSaving, setSaving] = useState(false);
-  const [lastError, setLastError] = useState();
-  const router = useRouter();
-
+export default function TransactionForm({ initialData }) {
   const {
     register,
     handleSubmit,
-    setValue,
     watch,
+    setValue,
     formState: { errors },
-  } = useForm({ mode: "onTouched", resolver: zodResolver(transactionSchema) });
-
+  } = useForm({
+    mode: "onTouched",
+    resolver: zodResolver(transactionSchema),
+    defaultValues: initialData ?? {
+      created_at: new Date().toISOString().split("T")[0],
+    },
+  });
+  const router = useRouter();
+  const [isSaving, setSaving] = useState(false);
+  const [lastError, setLastError] = useState();
   const type = watch("type");
-
-  useEffect(() => {
-    if (type !== "Expense") {
-      setValue("category", "");
-    }
-  }, [type, setValue]);
+  const editing = Boolean(initialData);
 
   const onSubmit = async (data) => {
     setSaving(true);
     setLastError();
     try {
-      await createTransaction(data);
+      if (editing) {
+        await updateTransaction(initialData.id, data);
+      } else {
+        await createTransaction(data);
+      }
       router.push("/dashboard");
     } catch (error) {
       setLastError(error);
@@ -82,47 +51,58 @@ export default function TransactionForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4">
+    <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {fields.map(
-          ({
-            label,
-            name,
-            component: Component,
-            options,
-            type: inputType,
-            span,
-          }) => (
-            <div key={name} className={`col-span-${span || 1}`}>
-              <Label className="mb-1">{label}</Label>
-              {options ? (
-                <Component
-                  {...register(name)}
-                  disabled={name === "category" && type !== "Expense"}
-                >
-                  <option value="">
-                    {name === "category"
-                      ? "Select a category"
-                      : "Select a type"}
-                  </option>
-                  {options.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </Component>
-              ) : (
-                <Component type={inputType} {...register(name)} />
-              )}
-              {errors[name] && <FormError error={errors[name]?.message} />}
-            </div>
-          )
-        )}
-      </div>
-      <div className="flex justify-between items-center">
-        <div className="error">
-          {lastError && <FormError error={lastError.message} />}
+        <div>
+          <Label className="mb-1">Type</Label>
+          <Select
+            {...register("type", {
+              onChange: (e) => {
+                if (e.target.value !== "Expense") {
+                  setValue("category", "");
+                }
+              },
+            })}
+          >
+            {types.map((type) => (
+              <option key={type}>{type}</option>
+            ))}
+          </Select>
+          <FormError error={errors.type} />
         </div>
+
+        <div>
+          <Label className="mb-1">Category</Label>
+          <Select {...register("category")} disabled={type !== "Expense"}>
+            <option value="">Select a category</option>
+            {categories.map((category) => (
+              <option key={category}>{category}</option>
+            ))}
+          </Select>
+          <FormError error={errors.category} />
+        </div>
+
+        <div>
+          <Label className="mb-1">Date</Label>
+          <Input {...register("created_at")} disabled={editing} />
+          <FormError error={errors.created_at} />
+        </div>
+
+        <div>
+          <Label className="mb-1">Amount</Label>
+          <Input type="number" {...register("amount")} />
+          <FormError error={errors.amount} />
+        </div>
+
+        <div className="col-span-1 md:col-span-2">
+          <Label className="mb-1">Description</Label>
+          <Input {...register("description")} />
+          <FormError error={errors.description} />
+        </div>
+      </div>
+
+      <div className="flex justify-between items-center">
+        <div>{lastError && <FormError error={lastError} />}</div>
         <Button type="submit" disabled={isSaving}>
           Save
         </Button>

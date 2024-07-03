@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Loader } from "lucide-react";
 
+
 import Button from "@/components/button";
 import Separator from "@/components/separator";
 import TransactionItem from "@/components/transaction-item";
@@ -9,20 +10,25 @@ import TransactionSummaryItem from "@/components/transaction-summary-item";
 import { fetchTransactions } from "@/lib/actions";
 import { groupAndSumTransactionsByDate } from "@/lib/utils";
 
+
 export default function TransactionList({ range, initialTransactions }) {
   const [transactions, setTransactions] = useState(initialTransactions);
-  const [offset, setOffset] = useState(initialTransactions.length + 1);
+  const [offset, setOffset] = useState(initialTransactions.length);
   const [buttonHidden, setButtonHidden] = useState(
     initialTransactions.length === 0
   );
   const [loading, setLoading] = useState(false);
   const grouped = groupAndSumTransactionsByDate(transactions);
 
-  const handleClick = async (e) => {
+  const handleClick = async () => {
     setLoading(true);
     let nextTransactions = null;
     try {
-      nextTransactions = await fetchTransactions(range, offset, 10);
+      nextTransactions = await fetchTransactions(
+        range,
+        transactions.length,
+        10
+      );
       setButtonHidden(nextTransactions.length === 0);
       setOffset((prevValue) => prevValue + 10);
       setTransactions((prevTransactions) => [
@@ -34,6 +40,10 @@ export default function TransactionList({ range, initialTransactions }) {
     }
   };
 
+  const handleRemoved = (id) => () => {
+    setTransactions((prev) => [...prev].filter((t) => t.id !== id));
+  };
+
   return (
     <div className="space-y-8">
       {Object.entries(grouped).map(([date, { transactions, amount }]) => (
@@ -43,7 +53,10 @@ export default function TransactionList({ range, initialTransactions }) {
           <section className="space-y-4">
             {transactions.map((transaction) => (
               <div key={transaction.id}>
-                <TransactionItem {...transaction} />
+                <TransactionItem
+                  {...transaction}
+                  onRemoved={handleRemoved(transaction.id)}
+                />
               </div>
             ))}
           </section>

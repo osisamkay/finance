@@ -21,7 +21,7 @@ const categories = [
 async function seed() {
   let transactions = [];
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 100; i++) {
     const created_at = faker.date.past();
     let type,
       category = null;
