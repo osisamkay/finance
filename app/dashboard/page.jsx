@@ -10,6 +10,7 @@ import { createClient } from "../../lib/supabase/server";
 import { variants, sizes } from "../../lib/variants";
 import TransactionList from "./components/transaction-list";
 import TransactionListFallback from "./components/transaction-list-fallback";
+import TransactionListWrapper from "./components/transaction-list-wrapper";
 import Trend from "./components/trend";
 import TrendFallback from "./components/trend-fallback";
 
@@ -19,14 +20,14 @@ const getLinkClasses = () =>
 export default function Page({ searchParams }) {
   const range = searchParams?.range ?? "last30days";
   return (
-    <>
-      <section className="mb-8 flex justify-between items-center">
+    <div className="space-y-8">
+      <section className="flex justify-between items-center">
         <h1 className="text-4xl font-semibold">Summary</h1>
         <aside>
           <Range />
         </aside>
       </section>
-      <section className="mb-8 grid grid-cols-2 lg:grid-cols-4 gap-8">
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-8">
         {types.map((type) => (
           <ErrorBoundary
             fallback={
@@ -41,7 +42,7 @@ export default function Page({ searchParams }) {
           </ErrorBoundary>
         ))}
       </section>
-      <section className="flex justify-between items-center mb-8">
+      <section className="flex justify-between items-center">
         <h2 className="text-2xl">Transactions</h2>
         <Link className={getLinkClasses()} href="/dashboard/transactions/add">
           <PlusCircle className="w-4 h-4" />
@@ -49,8 +50,8 @@ export default function Page({ searchParams }) {
         </Link>
       </section>
       <Suspense fallback={<TransactionListFallback />}>
-        <TransactionList range={range} />
+        <TransactionListWrapper range={range} />
       </Suspense>
-    </>
+    </div>
   );
 }
