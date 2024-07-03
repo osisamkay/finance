@@ -49,7 +49,7 @@ export default function Page({ searchParams }) {
         </Link>
       </section>
       <Suspense fallback={<TransactionListFallback />}>
-        <TransactionList />
+        <TransactionList range={range} />
       </Suspense>
     </>
   );
