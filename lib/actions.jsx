@@ -58,3 +58,23 @@ export async function deleteTransaction(id) {
   if (error) throw new Error(`Could not delete the transaction ${id}`);
   revalidatePath("/dashboard");
 }
+
+export async function login(prevState, formData) {
+  const supabase = createClient();
+  const email = formData.get("email");
+  const { error } = supabase.auth.signInWithOtp({
+    email,
+    options: {
+      shouldCreateUser: true,
+    },
+  });
+  if (error) {
+    return {
+      error: true,
+      message: "Error authenticating!",
+    };
+  }
+  return {
+    message: `Email sent to ${email}`,
+  };
+}
