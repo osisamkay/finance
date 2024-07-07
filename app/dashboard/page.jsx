@@ -17,8 +17,10 @@ import TrendFallback from "./components/trend-fallback";
 const getLinkClasses = () =>
   `flex items-center space-x-1 ${variants["outline"]} ${sizes["sm"]}`;
 
-export default function Page({ searchParams }) {
+export default async function Page({ searchParams }) {
   const range = searchParams?.range ?? "last30days";
+  const supabase = createClient();
+  console.log(await supabase.auth.getUser());
   return (
     <div className="space-y-8">
       <section className="flex justify-between items-center">
