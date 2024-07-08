@@ -2,14 +2,12 @@
 import { useState } from "react";
 import { Loader } from "lucide-react";
 
-
 import Button from "@/components/button";
 import Separator from "@/components/separator";
 import TransactionItem from "@/components/transaction-item";
 import TransactionSummaryItem from "@/components/transaction-summary-item";
 import { fetchTransactions } from "@/lib/actions";
 import { groupAndSumTransactionsByDate } from "@/lib/utils";
-
 
 export default function TransactionList({ range, initialTransactions }) {
   const [transactions, setTransactions] = useState(initialTransactions);
