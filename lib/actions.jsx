@@ -1,6 +1,8 @@
 "use server";
 import { revalidatePath } from "next/cache";
 
+import { redirect } from "next/navigation";
+
 import { createClient } from "./supabase/server";
 import { transactionSchema } from "./validation";
 
@@ -77,4 +79,10 @@ export async function login(prevState, formData) {
   return {
     message: `Email sent to ${email}`,
   };
+}
+
+export async function signOut() {
+  const supabase = createClient();
+  const { error } = await supabase.auth.signOut();
+  redirect("/login");
 }

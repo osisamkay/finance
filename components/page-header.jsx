@@ -7,10 +7,12 @@ import { sizes, variants } from "@/lib/variants";
 
 import Button from "./button";
 import DarkModeToggle from "./dark-mode-toggle";
+import SignOutButton from "./sign-out-button";
 
 export default async function PageHeader({ className }) {
   const theme = useServerDarkMode();
   const supabase = createClient();
+  console.log(supabase.auth.getUser());
   const {
     data: { user },
     error,
@@ -36,6 +38,7 @@ export default async function PageHeader({ className }) {
             <span>{user?.email}</span>
           </Button>
         )}
+        {user && <SignOutButton />}
         {!user && (
           <Link href="/login" className={`${variants["ghost"]} ${sizes["sm"]}`}>
             <KeyRound className="w-6 h-6" />
